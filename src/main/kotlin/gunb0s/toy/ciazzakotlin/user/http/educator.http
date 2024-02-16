@@ -1,0 +1,7 @@
+### create educator
+POST http://localhost:8080/educator
+Content-Type: application/json
+
+{
+  "name": "Cain"
+}
