@@ -19,7 +19,7 @@ Content-Type: application/json
 }
 
 ### Get Lecture list
-GET http://localhost:8080/lecture?page=0&size=10&semester=SPRING_2024&educatorId=1&lectureCode=SCA
+GET http://localhost:8080/lecture
 
 ### Get Lecture
 GET http://localhost:8080/lecture/1

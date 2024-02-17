@@ -1,0 +1,12 @@
+### Create Board
+POST http://localhost:8080/board
+Content-Type: application/json
+
+{
+  "title": "notice",
+  "lectureId": 1,
+  "educatorId": 1
+}
+
+### Get Board
+GET http://localhost:8080/board/1
