@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable
 interface PostQueryRepository {
     fun search(
         lectureId: Long,
-        boardID: Long,
+        boardId: Long,
         postSearchCondition: PostSearchCondition,
         pageable: Pageable,
     ): Page<Post>

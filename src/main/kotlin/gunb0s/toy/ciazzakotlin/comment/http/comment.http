@@ -1,0 +1,14 @@
+### Create Comment
+POST http://localhost:8080/comment
+Content-Type: application/json
+
+{
+  "content": "1st-1st-1st-1st",
+  "userId": 1,
+  "postId": 1,
+  "parentCommentId": 4
+}
+
+### Get Comment
+GET http://localhost:8080/comment?postId=1
+Content-Type: application/json
