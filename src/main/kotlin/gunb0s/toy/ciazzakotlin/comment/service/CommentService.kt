@@ -81,7 +81,6 @@ class CommentService(
                     parentComment.depth
                 )
             }
-
         }
         val saveComment: Comment = saveRootComment(createCommentDto, post, user)
         saveComment.commentGroupId = saveComment.id!!
