@@ -2,8 +2,10 @@ package gunb0s.toy.ciazzakotlin.lecture.controller.dto
 
 import gunb0s.toy.ciazzakotlin.board.entity.Board
 import gunb0s.toy.ciazzakotlin.lecture.entity.Lecture
+import io.swagger.v3.oas.annotations.media.Schema
 
 class LectureWithBoardDto(
+    @Schema(hidden = true)
     lecture: Lecture,
 ) {
     val id: Long = lecture.id!!
@@ -17,7 +19,10 @@ class LectureWithBoardDto(
         .map { board: Board -> BoardDto(board) }
         .toList()
 
-    class BoardDto(board: Board) {
+    class BoardDto(
+        @Schema(hidden = true)
+        board: Board,
+    ) {
         val id: Long = board.id!!
         val title = board.title
     }

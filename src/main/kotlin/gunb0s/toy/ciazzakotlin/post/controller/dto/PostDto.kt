@@ -1,8 +1,10 @@
 package gunb0s.toy.ciazzakotlin.post.controller.dto
 
 import gunb0s.toy.ciazzakotlin.post.entity.Post
+import io.swagger.v3.oas.annotations.media.Schema
 
 class PostDto(
+    @Schema(hidden = true)
     post: Post,
 ) {
     val id: Long = post.id!!

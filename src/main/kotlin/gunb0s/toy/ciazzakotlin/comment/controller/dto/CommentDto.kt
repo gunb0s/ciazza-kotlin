@@ -1,8 +1,10 @@
 package gunb0s.toy.ciazzakotlin.comment.controller.dto
 
 import gunb0s.toy.ciazzakotlin.comment.entity.Comment
+import io.swagger.v3.oas.annotations.media.Schema
 
 class CommentDto(
+    @Schema(hidden = true)
     comment: Comment,
 ) {
     val id: Long = comment.id!!
