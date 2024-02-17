@@ -26,12 +26,26 @@ class GlobalExceptionHandler {
     fun handleInvalidRegistrationCodeException(ex: InvalidRegistrationCodeException): ResponseEntity<ErrorResponseDto> {
         logger.error(ex.message, ex)
 
-        val dto: ErrorResponseDto = ErrorResponseDto(
+        val errorResponseDto = ErrorResponseDto(
             status = HttpStatus.BAD_REQUEST,
             message = ex.message!!
         )
         return ResponseEntity
             .badRequest()
-            .body(dto)
+            .body(errorResponseDto)
+    }
+
+    @ExceptionHandler(IllegalArgumentException::class)
+    fun handleIllegalArgumentException(ex: IllegalArgumentException): ResponseEntity<ErrorResponseDto> {
+        logger.error(ex.message, ex)
+
+        val errorResponseDto = ErrorResponseDto(
+            status = HttpStatus.BAD_REQUEST,
+            message = ex.message!!
+        )
+
+        return ResponseEntity
+            .badRequest()
+            .body(errorResponseDto)
     }
 }

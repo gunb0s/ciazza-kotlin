@@ -1,0 +1,19 @@
+### Create Post
+POST http://localhost:8080/post
+Content-Type: application/json
+
+{
+  "title": "hello post",
+  "content": "hello content",
+  "boardId": 1,
+  "userId": 1,
+  "lectureId": 1
+}
+
+### Get Post Detail
+GET http://localhost:8080/post/1
+
+### Get Post List
+GET http://localhost:8080/post?title=post&lectureId=1&boardId=1
+Content-Type: application/json
+
