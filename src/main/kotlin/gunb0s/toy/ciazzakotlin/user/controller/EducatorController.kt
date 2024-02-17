@@ -1,5 +1,6 @@
 package gunb0s.toy.ciazzakotlin.user.controller
 
+import gunb0s.toy.ciazzakotlin.common.dto.ResponseDto
 import gunb0s.toy.ciazzakotlin.user.controller.dto.CreateEducatorDto
 import gunb0s.toy.ciazzakotlin.user.controller.dto.CreateEducatorResponseDto
 import gunb0s.toy.ciazzakotlin.user.service.EducatorService
@@ -35,10 +36,11 @@ class EducatorController(
         )]
     )
     @PostMapping("/educator")
-    fun create(@RequestBody @Valid createEducatorDto: CreateEducatorDto): ResponseEntity<CreateEducatorResponseDto> {
+    fun create(@RequestBody @Valid createEducatorDto: CreateEducatorDto): ResponseEntity<ResponseDto<CreateEducatorResponseDto>> {
         val id = educatorService.create(createEducatorDto)
+        val responseDto = ResponseDto.created(CreateEducatorResponseDto(id))
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(CreateEducatorResponseDto(id))
+            .body(responseDto)
     }
 }

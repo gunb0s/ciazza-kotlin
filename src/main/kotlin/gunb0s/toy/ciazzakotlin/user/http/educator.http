@@ -3,5 +3,5 @@ POST http://localhost:8080/educator
 Content-Type: application/json
 
 {
-  "name": "Cain"
+  "name": "song gang"
 }
