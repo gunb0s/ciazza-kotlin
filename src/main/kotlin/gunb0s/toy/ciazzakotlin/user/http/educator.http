@@ -1,7 +1,14 @@
-### create educator
+### Create Educator
 POST http://localhost:8080/educator
 Content-Type: application/json
 
 {
-  "name": "song gang"
+  "name": "Bob"
 }
+
+### Get Educator List
+GET http://localhost:8080/educator
+
+### Get Educator
+GET http://localhost:8080/educator/1
+
