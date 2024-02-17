@@ -21,4 +21,17 @@ class GlobalExceptionHandler {
             .status(HttpStatus.NOT_FOUND)
             .body(errorResponseDto)
     }
+
+    @ExceptionHandler(InvalidRegistrationCodeException::class)
+    fun handleInvalidRegistrationCodeException(ex: InvalidRegistrationCodeException): ResponseEntity<ErrorResponseDto> {
+        logger.error(ex.message, ex)
+
+        val dto: ErrorResponseDto = ErrorResponseDto(
+            status = HttpStatus.BAD_REQUEST,
+            message = ex.message!!
+        )
+        return ResponseEntity
+            .badRequest()
+            .body(dto)
+    }
 }
