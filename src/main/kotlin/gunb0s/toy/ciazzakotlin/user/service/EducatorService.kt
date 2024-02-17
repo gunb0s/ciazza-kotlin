@@ -25,6 +25,6 @@ class EducatorService(
     }
 
     fun get(id: Long): Educator {
-        return educatorRepository.findById(id).orElseThrow { NoSuchElementException("educator not found") }
+        return educatorRepository.findById(id).orElseThrow { NoSuchElementException("educator not found with id $id") }
     }
 }

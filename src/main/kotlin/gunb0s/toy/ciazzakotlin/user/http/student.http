@@ -1,7 +1,16 @@
-### create student
+### Create Student
 POST http://localhost:8080/student
 Content-Type: application/json
 
 {
-  "name": "taylor"
+  "name": "choi jong in"
 }
+
+### Get Student List
+GET http://localhost:8080/student?size=2&page=1
+
+### Get Student
+GET http://localhost:8080/student/8
+
+### Get Lecture of student
+GET http://localhost:8080/student/8/lectures?semester=SPRING_2024
