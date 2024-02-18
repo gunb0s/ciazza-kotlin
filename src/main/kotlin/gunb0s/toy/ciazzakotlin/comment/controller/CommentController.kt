@@ -48,7 +48,7 @@ class CommentController(
             .body(responseDto)
     }
 
-    @Operation(summary = "get comments", description = "get comment of a post with pagination", tags = ["comment"])
+    @Operation(summary = "get comments", description = "get comment of a post sorted by view order", tags = ["comment"])
     @ApiResponses(
         value = [ApiResponse(
             responseCode = "200",
