@@ -83,7 +83,7 @@ class CommentService(
             }
         }
         val saveComment: Comment = saveRootComment(createCommentDto, post, user)
-        saveComment.commentGroupId = saveComment.id!!
+        saveComment.setCommentGroupId(saveComment.id!!)
         return saveComment.id!!
     }
 
@@ -170,7 +170,8 @@ class CommentService(
             user = user,
             commentOrder = 0,
             depth = 0,
-            commentGroupId = null
+            commentGroupId = null,
+            parentComment = null
         )
         val save: Comment = commentRepository.save(comment)
         return save

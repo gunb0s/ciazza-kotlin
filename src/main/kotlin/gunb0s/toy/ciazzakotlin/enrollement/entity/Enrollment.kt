@@ -22,15 +22,21 @@ import jakarta.persistence.UniqueConstraint
     )]
 )
 class Enrollment(
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "user_id")
-    var student: Student? = null,
-
-    @jakarta.persistence.ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lecture_id")
-    val lecture: Lecture? = null,
+    student: Student,
+    lecture: Lecture,
 ) : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "enrollment_id")
-    var id: Long? = null
+    val id: Long? = null
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    var student: Student = student
+        protected set
+
+    @jakarta.persistence.ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "lecture_id")
+    var lecture: Lecture = lecture
+        protected set
 }

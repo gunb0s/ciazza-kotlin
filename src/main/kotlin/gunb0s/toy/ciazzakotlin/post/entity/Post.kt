@@ -14,20 +14,31 @@ import jakarta.persistence.ManyToOne
 
 @Entity
 class Post(
-    var title: String,
-
-    var content: String,
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_id")
-    var board: Board,
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    var user: User,
+    title: String,
+    content: String,
+    board: Board,
+    user: User,
 ) : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")
     val id: Long? = null
+
+    @Column()
+    var title: String = title
+        protected set
+
+    @Column()
+    var content: String = content
+        protected set
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_id")
+    var board: Board = board
+        protected set
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    var user: User = user
+        protected set
 }

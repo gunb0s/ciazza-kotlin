@@ -16,12 +16,16 @@ import jakarta.persistence.Table
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "dtype")
 abstract class User(
-    var name: String,
+    name: String,
 ) : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    var id: Long? = null
+    val id: Long? = null
+
+    @Column()
+    var name: String = name
+        protected set
 
     @Column(updatable = false, insertable = false)
     var dtype: String? = null

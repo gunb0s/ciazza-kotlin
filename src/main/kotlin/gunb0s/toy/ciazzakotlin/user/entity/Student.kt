@@ -11,5 +11,7 @@ class Student(
     name: String,
 ) : User(name) {
     @OneToMany(mappedBy = "student")
-    val enrollments: MutableList<Enrollment> = mutableListOf()
+    protected val mutableEnrollments: MutableList<Enrollment> = mutableListOf()
+    val enrollments: List<Enrollment>
+        get() = mutableEnrollments.toList()
 }

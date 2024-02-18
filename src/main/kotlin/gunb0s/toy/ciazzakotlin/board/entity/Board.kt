@@ -13,14 +13,19 @@ import jakarta.persistence.ManyToOne
 
 @Entity
 class Board(
-    var title: String,
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lecture_id")
-    var lecture: Lecture,
+    title: String,
+    lecture: Lecture,
 ) : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_id")
-    var id: Long? = null
+    val id: Long? = null
+
+    var title: String = title
+        protected set
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "lecture_id")
+    var lecture: Lecture = lecture
+        protected set
 }

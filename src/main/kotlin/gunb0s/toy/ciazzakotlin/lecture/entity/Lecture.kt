@@ -27,30 +27,45 @@ import java.util.Random
     ), UniqueConstraint(name = "uk_lecture_lecture_code_and_semester", columnNames = ["lecture_code", "semester"])]
 )
 class Lecture(
-    var name: String,
-
-    var lectureCode: String,
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    var educator: Educator,
-
-    @Enumerated(EnumType.STRING)
-    var semester: Semester,
+    name: String,
+    lectureCode: String,
+    educator: Educator,
+    semester: Semester,
 ) : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "lecture_id")
-    var id: Long? = null
+    val id: Long? = null
+
+    @Column()
+    var name: String = name
+        protected set
+
+    @Column()
+    var lectureCode: String = lectureCode
+        protected set
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    var educator: Educator = educator
+        protected set
+
+    @Enumerated(EnumType.STRING)
+    var semester: Semester = semester
+        protected set
 
     @Column(
         length = 8,
         nullable = false
     )
     var registrationCode: String? = null
+        protected set
 
     @OneToMany(mappedBy = "lecture")
-    val boards: MutableList<Board> = mutableListOf()
+    protected val mutableBoards: MutableList<Board> = mutableListOf()
+
+    val boards: List<Board>
+        get() = mutableBoards.toList()
 
     @PrePersist
     fun generateRegistrationCode() {
