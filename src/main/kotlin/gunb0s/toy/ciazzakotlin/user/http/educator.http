@@ -3,7 +3,7 @@ POST http://localhost:8080/educator
 Content-Type: application/json
 
 {
-  "name": "Bob"
+  "name": "David"
 }
 
 ### Get Educator List

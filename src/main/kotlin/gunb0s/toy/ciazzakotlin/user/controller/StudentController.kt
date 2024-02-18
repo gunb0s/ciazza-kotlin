@@ -8,6 +8,7 @@ import gunb0s.toy.ciazzakotlin.user.controller.dto.CreateStudentDto
 import gunb0s.toy.ciazzakotlin.user.controller.dto.CreateStudentResponseDto
 import gunb0s.toy.ciazzakotlin.user.controller.dto.GetStudentDto
 import gunb0s.toy.ciazzakotlin.user.controller.dto.LectureDto
+import gunb0s.toy.ciazzakotlin.user.controller.dto.StudentDto
 import gunb0s.toy.ciazzakotlin.user.controller.dto.StudentLectureSearchCondition
 import gunb0s.toy.ciazzakotlin.user.entity.Student
 import gunb0s.toy.ciazzakotlin.user.service.StudentService
@@ -67,15 +68,13 @@ class StudentController(
     @GetMapping("/student")
     fun getList(
         @ParameterObject pageable: Pageable,
-    ): ResponseEntity<ResponseDto<Page<GetStudentDto>>> {
+    ): ResponseEntity<ResponseDto<Page<StudentDto>>> {
         val students: Page<Student> = studentService.getList(pageable)
-        val responseDto: ResponseDto<Page<GetStudentDto>> = ResponseDto.ok(
-            students.map {
-                GetStudentDto(it)
-            }
+        val responseDto: ResponseDto<Page<StudentDto>> = ResponseDto.ok(
+            students.map(::StudentDto)
         )
         return ResponseEntity
-            .ok<ResponseDto<Page<GetStudentDto>>>(responseDto)
+            .ok(responseDto)
     }
 
     @Operation(summary = "get student detail", description = "get student by id", tags = ["student"])

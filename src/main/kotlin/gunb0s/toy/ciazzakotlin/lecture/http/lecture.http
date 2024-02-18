@@ -3,19 +3,19 @@ POST http://localhost:8080/lecture
 Content-Type: application/json
 
 {
-  "name": "Introduction to Scala",
-  "lectureCode": "SCALA101",
-  "educatorId": 1,
+  "name": "OperatingSystem",
+  "lectureCode": "OS101",
+  "educatorId": 8,
   "semester": "SPRING_2024"
 }
 
 ### Enroll Lecture
-POST http://localhost:8080/lecture/1
+POST http://localhost:8080/lecture/3
 Content-Type: application/json
 
 {
-  "studentId": 2,
-  "registrationCode": "29882354"
+  "studentId": 3,
+  "registrationCode": "13954899"
 }
 
 ### Get Lecture list
