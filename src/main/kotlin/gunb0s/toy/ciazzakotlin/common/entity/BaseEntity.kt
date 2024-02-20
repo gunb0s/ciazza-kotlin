@@ -12,7 +12,7 @@ import java.time.LocalDateTime
 @MappedSuperclass
 class BaseEntity {
     @CreatedDate
-    @Column(updatable = false)
+    @Column(updatable = false, nullable = false)
     var createdDate: LocalDateTime = LocalDateTime.now()
         protected set
 

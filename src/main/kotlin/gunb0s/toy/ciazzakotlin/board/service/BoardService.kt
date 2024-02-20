@@ -20,7 +20,7 @@ class BoardService(
     fun create(createBoardDto: CreateBoardDto): Long {
         val exists: Boolean = educatorRepository.existsById(createBoardDto.educatorId)
         if (!exists) {
-            throw java.util.NoSuchElementException("educator not found with id: $createBoardDto.educatorId")
+            throw NoSuchElementException("educator not found with id: $createBoardDto.educatorId")
         }
         val lecture: Lecture = lectureRepository.findById(createBoardDto.lectureId).orElseThrow {
             NoSuchElementException(
