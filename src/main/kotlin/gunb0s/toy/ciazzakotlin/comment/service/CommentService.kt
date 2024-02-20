@@ -6,6 +6,7 @@ import gunb0s.toy.ciazzakotlin.comment.entity.Comment
 import gunb0s.toy.ciazzakotlin.comment.repository.CommentQueryRepository
 import gunb0s.toy.ciazzakotlin.comment.repository.CommentRepository
 import gunb0s.toy.ciazzakotlin.enrollement.repository.EnrollmentRepository
+import gunb0s.toy.ciazzakotlin.lecture.entity.Lecture
 import gunb0s.toy.ciazzakotlin.lecture.repository.LectureRepository
 import gunb0s.toy.ciazzakotlin.post.entity.Post
 import gunb0s.toy.ciazzakotlin.post.repository.PostRepository
@@ -37,6 +38,23 @@ class CommentService(
         )
         val lecture = post.board.lecture
 
+        checkUserHasRightToComment(user, lecture)
+
+        createCommentDto.parentCommentId?.let {
+            return saveBranchComment(
+                createCommentDto.parentCommentId,
+                createCommentDto.content,
+                post,
+                user
+            )
+        }
+        return saveRootComment(createCommentDto, post, user)
+    }
+
+    private fun checkUserHasRightToComment(
+        user: User,
+        lecture: Lecture,
+    ) {
         if (user.dtype.equals("E")) {
             lectureRepository.findByIdAndEducator(lecture.id!!, user as Educator)
                 ?: throw NoSuchElementException("lecture not found with id : $lecture.id and educator id :$user.id")
@@ -44,47 +62,63 @@ class CommentService(
             enrollmentRepository.findByStudentAndLecture(user as Student, lecture)
                 ?: throw NoSuchElementException(("enrollment not found with student id: $user.id and lecture id : $lecture.id"))
         }
+    }
 
-        createCommentDto.parentCommentId?.let {
-            val parentComment: Comment = commentRepository.findById(createCommentDto.parentCommentId).orElseThrow {
-                NoSuchElementException("parent comment not found with id: ${createCommentDto.parentCommentId}")
-            }
-            if (parentComment.isRootComment()) {
-                return saveFirstCommentOfRoot(createCommentDto, parentComment, post, user, parentComment.depth)
-            } else {
-                val maxCommentOrderInParent: Int? = commentRepository
-                    .maxCommentOrderByCommentGroupIdAndParentComment(parentComment.commentGroupId!!, parentComment)
-
-                maxCommentOrderInParent?.let {
-                    commentRepository.updateCommentOrderGoeThanOrder(
-                        parentComment.commentGroupId!!,
-                        maxCommentOrderInParent + 1
-                    )
-                    saveCommentOfParent(
-                        createCommentDto,
-                        post,
-                        user,
-                        parentComment,
-                        maxCommentOrderInParent,
-                        parentComment.depth
-                    )
-                }
-                commentRepository.updateCommentOrderGoeThanOrder(
-                    parentComment.commentGroupId!!,
-                    parentComment.commentOrder + 1
-                )
-                return saveFirstCommentOfParent(
-                    createCommentDto,
-                    post,
-                    user,
-                    parentComment,
-                    parentComment.depth
-                )
-            }
+    private fun saveRootComment(
+        createCommentDto: CreateCommentDto,
+        post: Post,
+        user: User,
+    ): Long {
+        val recentComment = commentRepository.findLatestCommentByPostId(post)
+        recentComment?.let {
+            val comment = Comment.createRootComment(
+                content = createCommentDto.content,
+                commentOrder = recentComment.commentOrder + 1,
+                post = post,
+                user = user,
+                commentGroupId = recentComment.commentGroupId
+            )
+            val saveComment = commentRepository.save(comment)
+            return saveComment.id!!
         }
-        val saveComment: Comment = saveRootComment(createCommentDto, post, user)
+
+        val comment = Comment.createRootComment(
+            content = createCommentDto.content,
+            commentOrder = 0,
+            post = post,
+            user = user,
+        )
+        val saveComment = commentRepository.save(comment)
         saveComment.setCommentGroupId(saveComment.id!!)
         return saveComment.id!!
+    }
+
+    private fun saveBranchComment(
+        parentCommentId: Long,
+        content: String,
+        post: Post,
+        user: User,
+    ): Long {
+        val parentComment = commentRepository.findById(parentCommentId)
+            .orElseThrow { NoSuchElementException("parent comment not found with id: $parentCommentId") }
+
+        val maxCommentOrder = commentRepository.maxCommentOrderByCommentGroupIdAndParentComment(
+            parentComment.commentGroupId!!,
+            parentComment
+        ) ?: parentComment.commentOrder
+
+        val comment = Comment.createBranchComment(
+            content = content,
+            commentOrder = maxCommentOrder + 1,
+            post = post,
+            user = user,
+            parentComment = parentComment
+        )
+
+        commentRepository.updateCommentOrderGoeThanOrder(post, maxCommentOrder + 1)
+        commentRepository.save(comment)
+
+        return comment.id!!
     }
 
     fun getCommentOfPost(getCommentOfPostDto: GetCommentOfPostDto, pageable: Pageable): Page<Comment> {
@@ -95,85 +129,5 @@ class CommentService(
         }
 
         return commentQueryRepository.findAllCommentsOfPost(postId, pageable)
-    }
-
-    private fun isFirstCommentOfParent(maxCommentOrderInParent: Int?): Boolean {
-        return maxCommentOrderInParent == null
-    }
-
-    private fun saveCommentOfParent(
-        createCommentDto: CreateCommentDto,
-        post: Post,
-        user: User,
-        parentComment: Comment,
-        maxCommentOrderInParent: Int,
-        parentCommentDepth: Int,
-    ): Long {
-        val comment = Comment(
-            content = createCommentDto.content,
-            post = post,
-            user = user,
-            parentComment = parentComment,
-            commentOrder = maxCommentOrderInParent + 1,
-            depth = parentCommentDepth + 1,
-            commentGroupId = parentComment.commentGroupId
-        )
-
-        return commentRepository.save(comment).id!!
-    }
-
-    private fun saveFirstCommentOfParent(
-        createCommentDto: CreateCommentDto,
-        post: Post,
-        user: User,
-        parentComment: Comment,
-        parentCommentDepth: Int,
-    ): Long {
-        val comment = Comment(
-            content = createCommentDto.content,
-            post = post,
-            user = user,
-            parentComment = parentComment,
-            commentOrder = parentComment.commentOrder + 1,
-            depth = parentCommentDepth + 1,
-            commentGroupId = parentComment.commentGroupId
-        )
-
-        return commentRepository.save(comment).id!!
-    }
-
-    private fun saveFirstCommentOfRoot(
-        createCommentDto: CreateCommentDto,
-        parentComment: Comment,
-        post: Post,
-        user: User,
-        parentCommentDepth: Int,
-    ): Long {
-        val maxCommentOrder: Int = commentRepository
-            .maxCommentOrderByCommentGroupId(parentComment.commentGroupId!!)
-        val comment = Comment(
-            content = createCommentDto.content,
-            post = post,
-            user = user,
-            parentComment = parentComment,
-            commentOrder = maxCommentOrder + 1,
-            depth = parentCommentDepth + 1,
-            commentGroupId = parentComment.commentGroupId
-        )
-        return commentRepository.save(comment).id!!
-    }
-
-    private fun saveRootComment(createCommentDto: CreateCommentDto, post: Post, user: User): Comment {
-        val comment = Comment(
-            content = createCommentDto.content,
-            post = post,
-            user = user,
-            commentOrder = 0,
-            depth = 0,
-            commentGroupId = null,
-            parentComment = null
-        )
-        val save: Comment = commentRepository.save(comment)
-        return save
     }
 }

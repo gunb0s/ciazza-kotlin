@@ -3,11 +3,12 @@ POST http://localhost:8080/comment
 Content-Type: application/json
 
 {
-  "content": "4st",
+  "content": "1st-1st-2st",
   "userId": 1,
-  "postId": 1
+  "postId": 2,
+  "parentCommentId": 14
 }
 
 ### Get Comment
-GET http://localhost:8080/comment?postId=1
+GET http://localhost:8080/comment?postId=2
 Content-Type: application/json
