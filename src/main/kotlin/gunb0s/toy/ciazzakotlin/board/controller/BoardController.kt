@@ -36,8 +36,8 @@ class BoardController(
     )
     @PostMapping("/board")
     fun create(@RequestBody createBoardDto: @Valid CreateBoardDto): ResponseEntity<ResponseDto<CreateBoardResponseDto>> {
-        val id: Long = boardService.create(createBoardDto)
-        val responseDto: ResponseDto<CreateBoardResponseDto> = ResponseDto.created(CreateBoardResponseDto(id))
+        val board = boardService.create(createBoardDto)
+        val responseDto: ResponseDto<CreateBoardResponseDto> = ResponseDto.created(CreateBoardResponseDto(board.id!!))
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body<ResponseDto<CreateBoardResponseDto>>(responseDto)

@@ -17,7 +17,7 @@ class BoardService(
     private val lectureRepository: LectureRepository,
 ) {
     @Transactional
-    fun create(createBoardDto: CreateBoardDto): Long {
+    fun create(createBoardDto: CreateBoardDto): Board {
         val exists: Boolean = educatorRepository.existsById(createBoardDto.educatorId)
         if (!exists) {
             throw NoSuchElementException("educator not found with id: $createBoardDto.educatorId")
@@ -38,7 +38,7 @@ class BoardService(
         )
 
         boardRepository.save(board)
-        return board.id!!
+        return board
     }
 
     fun get(boardId: Long): Board {
