@@ -49,8 +49,8 @@ class PostController(
     )
     @PostMapping("/post")
     fun create(@RequestBody createPostDto: @Valid CreatePostDto): ResponseEntity<ResponseDto<CreatePostResponseDto>> {
-        val id: Long = postService.create(createPostDto)
-        val responseDto: ResponseDto<CreatePostResponseDto> = ResponseDto.created(CreatePostResponseDto(id))
+        val post = postService.create(createPostDto)
+        val responseDto: ResponseDto<CreatePostResponseDto> = ResponseDto.created(CreatePostResponseDto(post.id!!))
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(responseDto)

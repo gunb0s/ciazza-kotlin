@@ -28,7 +28,7 @@ class PostService(
     private val boardRepository: BoardRepository,
 ) {
     @Transactional
-    fun create(createPostDto: CreatePostDto): Long {
+    fun create(createPostDto: CreatePostDto): Post {
         val userId: Long = createPostDto.userId
         val lectureId: Long = createPostDto.lectureId
 
@@ -58,7 +58,7 @@ class PostService(
         )
 
         postRepository.save(post)
-        return post.id!!
+        return post
     }
 
     fun get(postId: Long): Post {
