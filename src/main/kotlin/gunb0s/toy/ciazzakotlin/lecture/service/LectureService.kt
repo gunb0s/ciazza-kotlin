@@ -28,7 +28,7 @@ class LectureService(
     private val enrollmentRepository: EnrollmentRepository,
 ) {
     @Transactional
-    fun createLecture(createLectureDto: CreateLectureDto): Long {
+    fun create(createLectureDto: CreateLectureDto): Lecture {
         val educator: Educator = educatorRepository.findById(createLectureDto.educatorId).orElseThrow {
             NoSuchElementException(
                 "educator not found with id: $createLectureDto.educatorId"
@@ -40,12 +40,13 @@ class LectureService(
             educator = educator,
             semester = createLectureDto.semester
         )
+        lectureRepository.save(lecture)
 
-        return lectureRepository.save(lecture).id!!
+        return lecture
     }
 
     @Transactional
-    fun enroll(lectureId: Long, enrollLectureDto: EnrollLectureDto): Long {
+    fun enroll(lectureId: Long, enrollLectureDto: EnrollLectureDto): Enrollment {
         val lecture = lectureRepository.findById(lectureId)
             .orElseThrow { NoSuchElementException("lecture not found with id, $lectureId") }
         val student: Student = studentRepository.findById(enrollLectureDto.studentId).orElseThrow {
@@ -64,7 +65,7 @@ class LectureService(
         )
 
         enrollmentRepository.save(enrollment)
-        return enrollment.id!!
+        return enrollment
     }
 
     fun getList(lectureSearchCondition: LectureSearchCondition, pageable: Pageable): Page<Lecture> {
