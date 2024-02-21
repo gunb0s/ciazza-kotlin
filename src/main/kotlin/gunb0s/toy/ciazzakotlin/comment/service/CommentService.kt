@@ -30,11 +30,11 @@ class CommentService(
     private val enrollmentRepository: EnrollmentRepository,
 ) {
     @Transactional
-    fun create(createCommentDto: CreateCommentDto): Long {
+    fun create(createCommentDto: CreateCommentDto): Comment {
         val user = userRepository.findById(createCommentDto.userId)
             .orElseThrow { NoSuchElementException("user not found with id: ${createCommentDto.userId}") }
         val post = postRepository.findByIdWithBoard(createCommentDto.postId) ?: throw NoSuchElementException(
-            "post not found with id: $createCommentDto.postId"
+            "post not found with id: ${createCommentDto.postId}"
         )
         val lecture = post.board.lecture
 
@@ -51,7 +51,7 @@ class CommentService(
         return saveRootComment(createCommentDto, post, user)
     }
 
-    private fun checkUserHasRightToComment(
+    fun checkUserHasRightToComment(
         user: User,
         lecture: Lecture,
     ) {
@@ -64,11 +64,11 @@ class CommentService(
         }
     }
 
-    private fun saveRootComment(
+    fun saveRootComment(
         createCommentDto: CreateCommentDto,
         post: Post,
         user: User,
-    ): Long {
+    ): Comment {
         val recentComment = commentRepository.findLatestCommentByPostId(post)
         recentComment?.let {
             val comment = Comment.createRootComment(
@@ -78,8 +78,8 @@ class CommentService(
                 user = user,
                 commentGroupId = recentComment.commentGroupId
             )
-            val saveComment = commentRepository.save(comment)
-            return saveComment.id!!
+            commentRepository.save(comment)
+            comment
         }
 
         val comment = Comment.createRootComment(
@@ -88,17 +88,17 @@ class CommentService(
             post = post,
             user = user,
         )
-        val saveComment = commentRepository.save(comment)
-        saveComment.setCommentGroupId(saveComment.id!!)
-        return saveComment.id!!
+        commentRepository.save(comment)
+        comment.setCommentGroupId(comment.id!!)
+        return comment
     }
 
-    private fun saveBranchComment(
+    fun saveBranchComment(
         parentCommentId: Long,
         content: String,
         post: Post,
         user: User,
-    ): Long {
+    ): Comment {
         val parentComment = commentRepository.findById(parentCommentId)
             .orElseThrow { NoSuchElementException("parent comment not found with id: $parentCommentId") }
 
@@ -118,14 +118,14 @@ class CommentService(
         commentRepository.updateCommentOrderGoeThanOrder(post, maxCommentOrder + 1)
         commentRepository.save(comment)
 
-        return comment.id!!
+        return comment
     }
 
     fun getCommentOfPost(getCommentOfPostDto: GetCommentOfPostDto, pageable: Pageable): Page<Comment> {
         val postId: Long = getCommentOfPostDto.postId
         val exists: Boolean = postRepository.existsById(postId)
         if (!exists) {
-            throw java.util.NoSuchElementException("post not found with id $postId")
+            throw NoSuchElementException("post not found with id: $postId")
         }
 
         return commentQueryRepository.findAllCommentsOfPost(postId, pageable)

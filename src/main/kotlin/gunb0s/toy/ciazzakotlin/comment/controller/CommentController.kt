@@ -40,9 +40,9 @@ class CommentController(
     )
     @PostMapping("/comment")
     fun createComment(@RequestBody createCommentDto: @Valid CreateCommentDto): ResponseEntity<ResponseDto<CreateCommentResponseDto>> {
-        val id: Long = commentService.create(createCommentDto)
+        val comment = commentService.create(createCommentDto)
         val responseDto =
-            ResponseDto.ok(CreateCommentResponseDto(id))
+            ResponseDto.ok(CreateCommentResponseDto(comment.id!!))
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(responseDto)
