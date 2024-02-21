@@ -11,7 +11,7 @@ import io.mockk.mockk
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.test.util.ReflectionTestUtils
-import java.util.Optional
+import java.util.*
 
 class EducatorServiceTest(
 ) : DescribeSpec({
@@ -41,7 +41,7 @@ class EducatorServiceTest(
 
     describe("getList") {
         context("pageable 이 주어지면") {
-            it("educator 를 조회하여 반환한다") {
+            it("educator 들을 조회하여 반환한다") {
                 // given
                 val pageable = mockk<Pageable>()
                 val page = mockk<Page<Educator>>()

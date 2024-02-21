@@ -3,13 +3,7 @@ package gunb0s.toy.ciazzakotlin.user.controller
 import gunb0s.toy.ciazzakotlin.common.dto.ResponseDto
 import gunb0s.toy.ciazzakotlin.common.exception.ErrorResponseDto
 import gunb0s.toy.ciazzakotlin.enrollement.entity.Enrollment
-import gunb0s.toy.ciazzakotlin.user.controller.dto.CreateEducatorResponseDto
-import gunb0s.toy.ciazzakotlin.user.controller.dto.CreateStudentDto
-import gunb0s.toy.ciazzakotlin.user.controller.dto.CreateStudentResponseDto
-import gunb0s.toy.ciazzakotlin.user.controller.dto.GetStudentDto
-import gunb0s.toy.ciazzakotlin.user.controller.dto.LectureDto
-import gunb0s.toy.ciazzakotlin.user.controller.dto.StudentDto
-import gunb0s.toy.ciazzakotlin.user.controller.dto.StudentLectureSearchCondition
+import gunb0s.toy.ciazzakotlin.user.controller.dto.*
 import gunb0s.toy.ciazzakotlin.user.entity.Student
 import gunb0s.toy.ciazzakotlin.user.service.StudentService
 import io.swagger.v3.oas.annotations.Operation
@@ -24,11 +18,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @Tag(name = "student", description = "the student API")

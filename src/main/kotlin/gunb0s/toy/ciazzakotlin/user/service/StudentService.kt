@@ -22,8 +22,8 @@ class StudentService(
         val student = Student(
             name = createEducatorDto.name
         )
-        studentRepository.save(student)
-        return student.id!!
+        val save = studentRepository.save(student)
+        return save.id!!
     }
 
     fun getList(pageable: Pageable): Page<Student> {
