@@ -4,6 +4,7 @@ import gunb0s.toy.ciazzakotlin.common.exception.InvalidRegistrationCodeException
 import gunb0s.toy.ciazzakotlin.enrollement.repository.EnrollmentRepository
 import gunb0s.toy.ciazzakotlin.lecture.controller.dto.CreateLectureDto
 import gunb0s.toy.ciazzakotlin.lecture.controller.dto.EnrollLectureDto
+import gunb0s.toy.ciazzakotlin.lecture.controller.dto.LectureSearchCondition
 import gunb0s.toy.ciazzakotlin.lecture.entity.Lecture
 import gunb0s.toy.ciazzakotlin.lecture.entity.Semester
 import gunb0s.toy.ciazzakotlin.lecture.repository.LectureQueryRepository
@@ -17,7 +18,9 @@ import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
-import java.util.*
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import java.util.Optional
 
 class LectureServiceTest : DescribeSpec({
     val lectureRepository = mockk<LectureRepository>()
@@ -139,6 +142,50 @@ class LectureServiceTest : DescribeSpec({
                 // then
                 result.lecture shouldBe lecture
                 result.student shouldBe student
+            }
+        }
+    }
+    describe("getList") {
+        context("lectureSearchCondition 과 pageable 이 주어졌을 때") {
+            it("lectureQueryRepository 를 통해 조회한 결과를 반환한다") {
+                // given
+                val lectureSearchCondition = mockk<LectureSearchCondition>()
+                val pageable = mockk<Pageable>()
+                val page = mockk<Page<Lecture>>()
+                every { lectureQueryRepository.findAllBySearchCondition(lectureSearchCondition, pageable) } returns page
+
+                // when
+                val result = lectureService.getList(lectureSearchCondition, pageable)
+
+                // then
+                result shouldBe page
+            }
+        }
+    }
+    describe("get") {
+        context("lectureId 가 주어졌을 때") {
+            it("lectureRepository 를 통해 조회한 결과가 없다면 NoSuchElementException 을 던진다") {
+                // given
+                val lectureId = 1L
+                every { lectureRepository.findByIdWitEducator(lectureId) } returns null
+
+                // when
+                // then
+                shouldThrow<NoSuchElementException> {
+                    lectureService.get(lectureId)
+                }
+            }
+            it("lectureRepository 를 통해 조회한 결과를 반환한다") {
+                // given
+                val lectureId = 1L
+                val lecture = mockk<Lecture>()
+                every { lectureRepository.findByIdWitEducator(lectureId) } returns lecture
+
+                // when
+                val result = lectureService.get(lectureId)
+
+                // then
+                result shouldBe lecture
             }
         }
     }
