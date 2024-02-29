@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RestController
+import java.security.Principal
 
 @RestController
 @Tag(name = "User", description = "User API")
@@ -43,4 +44,7 @@ class UserController(
         return ResponseEntity
             .ok<ResponseDto<Page<CommentDto>>>(responseDto)
     }
+
+    @GetMapping("/user")
+    fun user(principal: Principal) = principal
 }
