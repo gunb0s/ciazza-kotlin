@@ -1,3 +1,12 @@
+management:
+  endpoints:
+    enabled-by-default: false
+  endpoint:
+    info.enabled: true
+    health:
+      enabled: true
+      show-details: always
+
 spring:
   datasource:
     #    url: jdbc:h2:tcp://localhost:1521/ciazza
