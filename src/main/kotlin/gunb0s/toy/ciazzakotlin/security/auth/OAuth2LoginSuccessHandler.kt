@@ -5,9 +5,8 @@ import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler
-import org.springframework.stereotype.Component
 
-@Component
+//@Component
 class OAuth2LoginSuccessHandler(
     @Value("\${frontend.url}")
     private val frontendUrl: String,
