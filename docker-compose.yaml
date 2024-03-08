@@ -1,0 +1,10 @@
+services:
+  ciazza-mysql:
+    image: mysql:8.0.31
+    container_name: ciazza-mysql
+    environment:
+      MYSQL_DATABASE: ciazza_kotlin
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_ADMIN_USER: root
+    ports:
+      - "3306:3306"

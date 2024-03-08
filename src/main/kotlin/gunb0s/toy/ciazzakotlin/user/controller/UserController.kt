@@ -22,7 +22,6 @@ import java.security.Principal
 class UserController(
     private val userService: UserService,
 ) {
-
     @Operation(summary = "get comments", description = "get comment of a user with pagination", tags = ["user"])
     @ApiResponses(
         value = [ApiResponse(
